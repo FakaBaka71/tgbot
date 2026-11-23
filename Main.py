@@ -1,5 +1,5 @@
-import telebot, sqlite3, time, itertools, os
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+import telebot, sqlite3, time, os
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
 
 # ================= CONFIG =================
 BOT_TOKEN = "9062068619:AAE0T3sL7zz66MSZsbRZSOgGj9ylYP2niFQ" 
@@ -40,6 +40,12 @@ def add_bal(uid, amt):
     with cn() as c: c.execute("UPDATE users SET balance=balance+? WHERE user_id=?", (amt, uid))
 
 # ================= KEYBOARDS =================
+def main_menu_btn():
+    # পার্মানেন্ট মেনু বাটন
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add(KeyboardButton("🏠 Main Menu"))
+    return markup
+
 def kb_main(uid):
     r = [[InlineKeyboardButton(text=f"🛒 {amon('Bᴜʏ Pʀᴏᴅᴜᴄᴛ')}", callback_data="buy")],
          [InlineKeyboardButton(text=f"📦 {amon('Sᴛᴏᴄᴋ')}", callback_data="stock")],
@@ -65,19 +71,29 @@ def kb_admin(uid):
     return InlineKeyboardMarkup(r)
 
 # ================= HANDLERS =================
-# স্টেট ম্যানেজমেন্টের জন্য ডিকশনারি
 states = {}
 
 @bot.message_handler(commands=['start'])
 def start(m):
     user(m.from_user.id)
     if user(m.from_user.id)["banned"]: return bot.send_message(m.chat.id, "🚫 আপনি ব্যান হয়েছেন।")
+    
     msg = bot.send_message(m.chat.id, "✨")
-    # Animation
     for i in range(3):
         bot.edit_message_text(f"⏳ Lᴏᴀᴅɪɴɢ... {['◐','◓','◑','◒'][i%4]}", m.chat.id, msg.message_id)
         time.sleep(0.3)
-    bot.edit_message_text(f"👋 {amon('Wᴇʟᴄᴏᴍᴇ')} {m.from_user.first_name}!\n\n🎯 {amon('Pʀᴇᴍɪᴜᴍ Vᴘɴ')} — নিচে থেকে বেছে নিন 👇", m.chat.id, msg.message_id, reply_markup=kb_main(m.from_user.id))
+    
+    # এখানে reply_markup এ main_menu_btn() যোগ করা হয়েছে
+    bot.edit_message_text(f"👋 {amon('Wᴇʟᴄᴏᴍᴇ')} {m.from_user.first_name}!\n\n🎯 {amon('Pʀᴇᴍɪᴜᴍ Vᴘɴ')} — নিচে থেকে বেছে নিন 👇", 
+                          m.chat.id, msg.message_id, reply_markup=kb_main(m.from_user.id))
+    
+    # পার্মানেন্ট মেনু বাটনটি চালু করা হলো
+    bot.send_message(m.chat.id, "মেনু বাটনটি চালু করা হলো 👇", reply_markup=main_menu_btn())
+
+@bot.message_handler(func=lambda m: m.text == "🏠 Main Menu")
+def menu_btn_pressed(m):
+    states.pop(m.from_user.id, None)
+    bot.send_message(m.chat.id, f"🏠 {amon('Mᴀɪɴ Mᴇᴍᴜ')}\n\nনিচে থেকে বেছে নিন 👇", reply_markup=kb_main(m.from_user.id))
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback(call):
