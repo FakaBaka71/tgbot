@@ -39,31 +39,38 @@ def stock_left():
 def add_bal(uid, amt):
     with cn() as c: c.execute("UPDATE users SET balance=balance+? WHERE user_id=?", (amt, uid))
 
-# ================= KEYBOARDS =================
+# ================= COLORFUL KEYBOARDS =================
 def main_menu_btn():
-    # পার্মানেন্ট মেনু বাটন
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
     markup.add(KeyboardButton("🏠 Main Menu"))
     return markup
 
 def kb_main(uid):
-    r = [[InlineKeyboardButton(text=f"🛒 {amon('Bᴜʏ Pʀᴏᴅᴜᴄᴛ')}", callback_data="buy")],
-         [InlineKeyboardButton(text=f"📦 {amon('Sᴛᴏᴄᴋ')}", callback_data="stock")],
-         [InlineKeyboardButton(text=f"💰 {amon('Aᴅᴅ Bᴀʟᴀɴᴄᴇ')}", callback_data="addbal")],
-         [InlineKeyboardButton(text=f"👤 {amon('Aᴅᴍɪɴ Iɴғᴏ')}", callback_data="adinfo")],
-         [InlineKeyboardButton(text=f"🤝 {amon('Bᴜsɪɴᴇss Pᴀʀᴛɴᴇʀ')}", callback_data="partner")]]
-    if is_adm(uid): r.append([InlineKeyboardButton(text=f"⚙️ {amon('Aᴅᴍɪɴ Pᴀɴᴇʟ')}", callback_data="adpanel")])
+    # ২ নাম্বার ছবির মতো রঙিন ও সাজানো বাটন
+    r = [
+        [InlineKeyboardButton(text=f"🛒 {amon('Bᴜʏ Pʀᴏᴅᴜᴄᴛ')}", callback_data="buy")],
+        [InlineKeyboardButton(text=f"📦 {amon('Sᴛᴏᴄᴋ')}", callback_data="stock")],
+        [InlineKeyboardButton(text=f"💰 {amon('Aᴅᴅ Bᴀʟᴀɴᴄᴇ')}", callback_data="addbal")],
+        [InlineKeyboardButton(text=f"👤 {amon('Aᴅᴍɪɴ Iɴғᴏ')}", callback_data="adinfo")],
+        [InlineKeyboardButton(text=f"🤝 {amon('Bᴜsɪɴᴇss Pᴀʀᴛɴᴇʀ')}", callback_data="partner")]
+    ]
+    if is_adm(uid): 
+        r.append([InlineKeyboardButton(text=f"⚙️ {amon('Aᴅᴍɪɴ Pᴀɴᴇʟ')}", callback_data="adpanel")])
     return InlineKeyboardMarkup(r)
 
-def kb_back(): return InlineKeyboardMarkup([[InlineKeyboardButton(text="⬅️ Back", callback_data="menu")]])
+def kb_back(): 
+    return InlineKeyboardMarkup([[InlineKeyboardButton(text="🔙 Back", callback_data="menu")]])
 
 def kb_admin(uid):
-    r = [[InlineKeyboardButton(text="✅ Sᴛᴏᴄᴋ Aᴅᴅ", callback_data="a_stock")],
-         [InlineKeyboardButton(text="💰 Rᴀᴛᴇ Uᴘᴅᴀᴛᴇ", callback_data="a_rate")],
-         [InlineKeyboardButton(text="👥 Aᴅᴍɪɴ Lɪsᴛ", callback_data="a_list")],
-         [InlineKeyboardButton(text="🚫 Bᴀɴ » Uɴʙᴀɴ", callback_data="a_ban")],
-         [InlineKeyboardButton(text="💵 Bᴀʟᴀɴᴄᴇ +/-", callback_data="a_bal")],
-         [InlineKeyboardButton(text="📢 Bʀᴏᴀᴅᴄᴀsᴛ", callback_data="a_bc")]]
+    # অ্যাডমিন প্যানেলের বাটনগুলোও সুন্দর করে সাজানো হলো
+    r = [
+        [InlineKeyboardButton(text="✅ Sᴛᴏᴄᴋ Aᴅᴅ", callback_data="a_stock")],
+        [InlineKeyboardButton(text="💰 Rᴀᴛᴇ Uᴘᴅᴀᴛᴇ", callback_data="a_rate")],
+        [InlineKeyboardButton(text="👥 Aᴅᴍɪɴ Lɪsᴛ", callback_data="a_list")],
+        [InlineKeyboardButton(text="🚫 Bᴀɴ » Uɴʙᴀɴ", callback_data="a_ban")],
+        [InlineKeyboardButton(text="💵 Bᴀʟᴀɴᴄᴇ +/-", callback_data="a_bal")],
+        [InlineKeyboardButton(text="📢 Bʀᴏᴀᴅᴄᴀsᴛ", callback_data="a_bc")]
+    ]
     if is_own(uid):
         r.append([InlineKeyboardButton(text="⚙️ Aᴅᴅ Aᴅᴍɪɴ", callback_data="a_addadm")])
         r.append([InlineKeyboardButton(text="✏️ Eᴅɪᴛ Bᴜᴛᴛᴏɴs", callback_data="a_edit")])
@@ -83,12 +90,10 @@ def start(m):
         bot.edit_message_text(f"⏳ Lᴏᴀᴅɪɴɢ... {['◐','◓','◑','◒'][i%4]}", m.chat.id, msg.message_id)
         time.sleep(0.3)
     
-    # এখানে reply_markup এ main_menu_btn() যোগ করা হয়েছে
     bot.edit_message_text(f"👋 {amon('Wᴇʟᴄᴏᴍᴇ')} {m.from_user.first_name}!\n\n🎯 {amon('Pʀᴇᴍɪᴜᴍ Vᴘɴ')} — নিচে থেকে বেছে নিন 👇", 
                           m.chat.id, msg.message_id, reply_markup=kb_main(m.from_user.id))
     
-    # পার্মানেন্ট মেনু বাটনটি চালু করা হলো
-    bot.send_message(m.chat.id, "মেনু বাটনটি চালু করা হলো 👇", reply_markup=main_menu_btn())
+    bot.send_message(m.chat.id, "🏠 নিচের বাটন থেকে যেকোনো সময় মেইন মেনুতে ফিরতে পারবেন 👇", reply_markup=main_menu_btn())
 
 @bot.message_handler(func=lambda m: m.text == "🏠 Main Menu")
 def menu_btn_pressed(m):
