@@ -1,4 +1,4 @@
-ʟ'port telebot, sqlite3, time, os
+import telebot, sqlite3, time, os
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 # ================= CONFIG =================
@@ -44,7 +44,7 @@ def menu_user(uid):
     m = ReplyKeyboardMarkup(resize_keyboard=True)
     # বাটনের শুরুতে রঙিন সার্কেল দিয়ে সাজানো হয়েছে
     m.row(KeyboardButton(f"🟢 {amon('Bᴜʏ')}"), KeyboardButton(f"🟡 {amon('Sᴛᴏᴄᴋ')}"))
-    m.row(KeyboardButton(f"🔵 {amon('B.ɪɴғᴏ')}"), KeyboardButton(f"🟣 {amon('Iɴғᴏ')}"))
+    m.row(KeyboardButton(f"🔵 {amon('Bᴀʟ')}"), KeyboardButton(f"🟣 {amon('Iɴғᴏ')}"))
     m.row(KeyboardButton(f"🟠 {amon('Pᴀʀᴛɴᴇʀ')}"))
     if is_adm(uid):
         m.row(KeyboardButton(f"🔴 {amon('Aᴅᴍɪɴ')}"))
@@ -54,7 +54,7 @@ def menu_admin(uid):
     m = ReplyKeyboardMarkup(resize_keyboard=True)
     m.row(KeyboardButton("🟢 Aᴅᴅ Sᴛᴏᴄᴋ"), KeyboardButton("🟡 Rᴀᴛᴇ"))
     m.row(KeyboardButton("🔵 Aᴅᴍɪɴ Lɪsᴛ"), KeyboardButton("🔴 Bᴀɴ/Uɴʙᴀɴ"))
-    m.row(KeyboardButton("🟣 B.Aᴅᴅ +/-"), KeyboardButton("🟠 Bᴄᴀsᴛ"))
+    m.row(KeyboardButton("🟣 Bᴀʟ +/-"), KeyboardButton("🟠 Bᴄᴀsᴛ"))
     if is_own(uid):
         m.row(KeyboardButton("⚫ Aᴅᴅ Aᴅᴍɪɴ"), KeyboardButton("⚪ Eᴅɪᴛ Bᴛɴ"))
     m.row(KeyboardButton("🔙 Bᴀᴄᴋ Mᴇɴᴜ"))
