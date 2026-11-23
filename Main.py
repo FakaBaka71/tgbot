@@ -39,24 +39,23 @@ def stock_left():
 def add_bal(uid, amt):
     with cn() as c: c.execute("UPDATE users SET balance=balance+? WHERE user_id=?", (amt, uid))
 
-# ================= KEYBOARDS (COLORFUL MENU) =================
+# ================= KEYBOARDS (REPLY MENU) =================
 def menu_user(uid):
     m = ReplyKeyboardMarkup(resize_keyboard=True)
-    # বাটনের শুরুতে রঙিন সার্কেল দিয়ে সাজানো হয়েছে
-    m.row(KeyboardButton(f"🟢 {amon('Bᴜʏ')}"), KeyboardButton(f"🟡 {amon('Sᴛᴏᴄᴋ')}"))
-    m.row(KeyboardButton(f"🔵 {amon('Bᴀʟ')}"), KeyboardButton(f"🟣 {amon('Iɴғᴏ')}"))
-    m.row(KeyboardButton(f"🟠 {amon('Pᴀʀᴛɴᴇʀ')}"))
+    m.row(KeyboardButton(f"🛒 {amon('Bᴜʏ')}"), KeyboardButton(f"📦 {amon('Sᴛᴏᴄᴋ')}"))
+    m.row(KeyboardButton(f"💰 {amon('Bᴀʟᴀɴᴄᴇ')}"), KeyboardButton(f"👤 {amon('Iɴғᴏ')}"))
+    m.row(KeyboardButton(f"🤝 {amon('Pᴀʀᴛɴᴇʀ')}"))
     if is_adm(uid):
-        m.row(KeyboardButton(f"🔴 {amon('Aᴅᴍɪɴ')}"))
+        m.row(KeyboardButton(f"⚙️ {amon('Aᴅᴍɪɴ')}"))
     return m
 
 def menu_admin(uid):
     m = ReplyKeyboardMarkup(resize_keyboard=True)
-    m.row(KeyboardButton("🟢 Aᴅᴅ Sᴛᴏᴄᴋ"), KeyboardButton("🟡 Rᴀᴛᴇ"))
-    m.row(KeyboardButton("🔵 Aᴅᴍɪɴ Lɪsᴛ"), KeyboardButton("🔴 Bᴀɴ/Uɴʙᴀɴ"))
-    m.row(KeyboardButton("🟣 Bᴀʟ +/-"), KeyboardButton("🟠 Bᴄᴀsᴛ"))
+    m.row(KeyboardButton("✅ Aᴅᴅ Sᴛᴏᴄᴋ"), KeyboardButton("💰 Rᴀᴛᴇ"))
+    m.row(KeyboardButton("👥 Aᴅᴍɪɴ Lɪsᴛ"), KeyboardButton("🚫 Bᴀɴ/Uɴʙᴀɴ"))
+    m.row(KeyboardButton("💵 Bᴀʟᴀɴᴄᴇ"), KeyboardButton("📢 Bᴄᴀsᴛ"))
     if is_own(uid):
-        m.row(KeyboardButton("⚫ Aᴅᴅ Aᴅᴍɪɴ"), KeyboardButton("⚪ Eᴅɪᴛ Bᴛɴ"))
+        m.row(KeyboardButton("⚙️ Aᴅᴅ Aᴅᴍɪɴ"), KeyboardButton("✏️ Eᴅɪᴛ Bᴛɴ"))
     m.row(KeyboardButton("🔙 Bᴀᴄᴋ Mᴇɴᴜ"))
     return m
 
@@ -77,49 +76,49 @@ def start(m):
     bot.send_message(m.chat.id, "🏠 মেইন মেনু 👇", reply_markup=menu_user(m.from_user.id))
 
 # ----- Main Menu Buttons (Reply Keyboard) -----
-@bot.message_handler(func=lambda m: m.text == f"🟢 {amon('Bᴜʏ')}")
+@bot.message_handler(func=lambda m: m.text == f"🛒 {amon('Bᴜʏ')}")
 def btn_buy(m):
     if stock_left() == 0:
         return bot.send_message(m.chat.id, "❌ Sᴛᴏᴄᴋ Nᴏ Aᴠᴀɪʟᴀʙʟᴇ\n\nঅ্যাডমিনকে স্টক যোগ করতে বলুন।")
     states[m.from_user.id] = "qty"
     bot.send_message(m.chat.id, "🛒 আপনি কয়টি Vᴘɴ নিতে চান? সংখ্যা লিখুন (যেমন: 1,2,3,)")
 
-@bot.message_handler(func=lambda m: m.text == f"🟡 {amon('Sᴛᴏᴄᴋ')}")
+@bot.message_handler(func=lambda m: m.text == f"📦 {amon('Sᴛᴏᴄᴋ')}")
 def btn_stock(m):
     with cn() as x: sold = x.execute("SELECT COUNT(*) FROM stock WHERE sold=1").fetchone()[0]
     bot.send_message(m.chat.id, f"📦 {amon('Sᴛᴏᴄᴋ Dᴇᴛᴀɪʟs')}\n\n✅ Aᴠᴀɪʟᴀʙʟᴇ : {stock_left()}\n🛒 Sᴏʟᴅ Oᴜᴛ : {sold}")
 
-@bot.message_handler(func=lambda m: m.text == f"🔵 {amon('Bᴀʟ')}")
+@bot.message_handler(func=lambda m: m.text == f"💰 {amon('Bᴀʟ')}")
 def btn_bal(m):
     bot.send_message(m.chat.id, f"💰 {amon('Aᴅᴅ Bᴀʟᴀɴᴄᴇ')}\n\nযোগাযোগ করুন:\n\nNᴀᴍᴇ : {amon('𝗗𝗔𝗥𝗞 𝗟𝗘𝗢')} 🅕︎🧛‍♂️\nUsᴇʀNᴀᴍᴇ : @BangIadeshi")
 
-@bot.message_handler(func=lambda m: m.text == f"🟣 {amon('Iɴғᴏ')}")
+@bot.message_handler(func=lambda m: m.text == f"👤 {amon('Iɴғᴏ')}")
 def btn_info(m):
     bot.send_message(m.chat.id, f"👤 {amon('Aᴅᴍɪɴ Iɴғᴏ')}\n\nNᴀᴍᴇ : {amon('𝗗𝗔𝗥𝗞 𝗟𝗘𝗢')} 🅕︎🧛‍♂️\nUsᴇʀNᴀᴍᴇ : @BangIadeshi")
 
-@bot.message_handler(func=lambda m: m.text == f"🟠 {amon('Pᴀʀᴛɴᴇʀ')}")
+@bot.message_handler(func=lambda m: m.text == f"🤝 {amon('Pᴀʀᴛɴᴇʀ')}")
 def btn_partner(m):
     bot.send_message(m.chat.id, f"🤝 {amon('Bᴜsɪɴᴇss Pᴀʀᴛɴᴇʀ')}\n\nযোগাযোগ : @BangIadeshi")
 
 # ----- Admin Menu Buttons -----
-@bot.message_handler(func=lambda m: m.text == f"🔴 {amon('Aᴅᴍɪɴ')}")
+@bot.message_handler(func=lambda m: m.text == f"⚙️ {amon('Aᴅᴍɪɴ')}")
 def btn_admin_panel(m):
     if not is_adm(m.from_user.id): return bot.send_message(m.chat.id, "⛔️ Nᴏ ʏᴏᴜ Aᴅᴍɪɴ")
     bot.send_message(m.chat.id, f"⚙️ {amon('Aᴅᴍɪɴ Pᴀɴᴇʟ')} 👇", reply_markup=menu_admin(m.from_user.id))
 
-@bot.message_handler(func=lambda m: m.text == "🟢 Aᴅᴅ Sᴛᴏᴄᴋ")
+@bot.message_handler(func=lambda m: m.text == "✅ Aᴅᴅ Sᴛᴏᴄᴋ")
 def btn_a_stock(m):
     if not is_adm(m.from_user.id): return
     states[m.from_user.id] = "stock"
     bot.send_message(m.chat.id, "✅ Sᴛᴏᴄᴋ Aᴅᴅ\n\nফরম্যাট (প্রতি লাইনে একটি):\nName | Delivery | Gmail | Pass | Expired | Key | Rate")
 
-@bot.message_handler(func=lambda m: m.text == "🟡 Rᴀᴛᴇ")
+@bot.message_handler(func=lambda m: m.text == "💰 Rᴀᴛᴇ")
 def btn_a_rate(m):
     if not is_adm(m.from_user.id): return
     states[m.from_user.id] = "rate"
     bot.send_message(m.chat.id, "💰 সব Aᴠᴀɪʟᴀʙʟᴇ Vᴘɴ-এর নতুন Rᴀᴛᴇ লিখুন (শুধু সংখ্যা) :")
 
-@bot.message_handler(func=lambda m: m.text == "🔵 Aᴅᴍɪɴ Lɪsᴛ")
+@bot.message_handler(func=lambda m: m.text == "👥 Aᴅᴍɪɴ Lɪsᴛ")
 def btn_a_list(m):
     if not is_adm(m.from_user.id): return
     with cn() as x: rows = x.execute("SELECT user_id FROM users WHERE admin=1").fetchall()
@@ -127,31 +126,31 @@ def btn_a_list(m):
     t += "\n\n👥 Aᴅᴍɪɴs :\n" + ("\n".join(f"• {r['user_id']}" for r in rows) or "—")
     bot.send_message(m.chat.id, t)
 
-@bot.message_handler(func=lambda m: m.text == "🔴 Bᴀɴ/Uɴʙᴀɴ")
+@bot.message_handler(func=lambda m: m.text == "🚫 Bᴀɴ/Uɴʙᴀɴ")
 def btn_a_ban(m):
     if not is_adm(m.from_user.id): return
     states[m.from_user.id] = "ban"
     bot.send_message(m.chat.id, "Bᴀɴ » Uɴʙᴀɴ Usᴇʀ Iᴅ :")
 
-@bot.message_handler(func=lambda m: m.text == "🟣 Bᴀʟ +/-")
+@bot.message_handler(func=lambda m: m.text == "💵 Bᴀʟᴀɴᴄᴇ")
 def btn_a_bal(m):
     if not is_adm(m.from_user.id): return
     states[m.from_user.id] = "bal_uid"
     bot.send_message(m.chat.id, "Eɴᴛᴇʀ Usᴇʀ Iᴅ :")
 
-@bot.message_handler(func=lambda m: m.text == "🟠 Bᴄᴀsᴛ")
+@bot.message_handler(func=lambda m: m.text == "📢 Bᴄᴀsᴛ")
 def btn_a_bc(m):
     if not is_adm(m.from_user.id): return
     states[m.from_user.id] = "bc"
     bot.send_message(m.chat.id, "📢 ব্রডকাস্ট মেসেজ লিখুন:")
 
-@bot.message_handler(func=lambda m: m.text == "⚫ Aᴅᴅ Aᴅᴍɪɴ")
+@bot.message_handler(func=lambda m: m.text == "⚙️ Aᴅᴅ Aᴅᴍɪɴ")
 def btn_a_addadm(m):
     if not is_own(m.from_user.id): return
     states[m.from_user.id] = "addadm"
     bot.send_message(m.chat.id, "Nᴇᴡ Aᴅᴍɪɴs Usᴇʀ Iᴅ :")
 
-@bot.message_handler(func=lambda m: m.text == "⚪ Eᴅɪᴛ Bᴛɴ")
+@bot.message_handler(func=lambda m: m.text == "✏️ Eᴅɪᴛ Bᴛɴ")
 def btn_a_edit(m):
     bot.send_message(m.chat.id, "বাটন এডিট ফিচারটি কোডে পরিবর্তন করতে হবে।")
 
