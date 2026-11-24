@@ -805,7 +805,7 @@ async def do_bc(m: Message, state: FSMContext):
             ok += 1
         except Exception:
             fail += 1
-        await asyncio.sleep(0.05)
+        await asyncio.sleep(0.1)
     await m.answer(
         f"✅ BʀᴏᴀᴅCᴀsᴛ সম্পন্ন\nসফল: {ok} | ব্যর্থ: {fail}",
         reply_markup=kb_admin(m.from_user.id)
