@@ -14,7 +14,7 @@ from aiogram.types import (
 )
 
 # ================= CONFIG =================
-BOT_TOKEN = "PASTE_NEW_BOT_TOKEN_HERE"  # BotFather থেকে নতুন Token দিন
+BOT_TOKEN = "9062068619:AAE0T3sL7zz66MSZsbRZSOgGj9ylYP2niFQ"  # BotFather থেকে নতুন Token দিন
 MAIN_OWNER_IDS = [8614383351]
 DB = "vpn.db"
 
@@ -24,7 +24,7 @@ PAYMENT_METHODS = {
     "nagad": "YOUR_NAGAD_NUMBER",
     "rocket": "YOUR_ROCKET_NUMBER",
 }
-SUPPORT_USERNAME = "@YOUR_SUPPORT_USERNAME"
+SUPPORT_USERNAME = "@BangIadeshi"
 
 # ================= Aᴍᴏɴ FONT (ORIGINAL STYLE) =================
 _M = {
