@@ -2335,19 +2335,36 @@ def cleanup():
     logger.warning("Cleanup finished.")
 atexit.register(cleanup)
 
+
 # --- Main Execution ---
 if __name__ == '__main__':
-    logger.info("="*40 + "\n🤖 Bot Starting Up...\n" + f"🐍 Python: {sys.version.split()[0]}\n" +
-                f"🔧 Base Dir: {BASE_DIR}\n📁 Upload Dir: {UPLOAD_BOTS_DIR}\n" +
-                f"📊 Data Dir: {IROTECH_DIR}\n🔑 Owner ID: {OWNER_ID}\n🛡️ Admins: {admin_ids}\n" + "="*40)
-    keep_alive()
-    logger.info("🚀 Starting polling...")
-    while True:
-        try:
-            bot.infinity_polling(logger_level=logging.INFO, timeout=60, long_polling_timeout=30)
-        except requests.exceptions.ReadTimeout: logger.warning("Polling ReadTimeout. Restarting in 5s..."); time.sleep(5)
-        except requests.exceptions.ConnectionError as ce: logger.error(f"Polling ConnectionError: {ce}. Retrying in 15s..."); time.sleep(15)
-        except Exception as e:
-            logger.critical(f"💥 Unrecoverable polling error: {e}", exc_info=True)
-            logger.info("Restarting polling in 30s due to critical error..."); time.sleep(30)
-        finally: logger.warning("Polling attempt finished. Will restart if in loop."); time.sleep(1)
+    logger.info("=" * 40)
+    logger.info("🤖 Bot Starting Up...")
+    logger.info(f"🐍 Python: {sys.version.split()[0]}")
+    logger.info(f"🔧 Base Dir: {BASE_DIR}")
+    logger.info(f"📁 Upload Dir: {UPLOAD_BOTS_DIR}")
+    logger.info(f"📊 Data Dir: {IROTECH_DIR}")
+    logger.info(f"🔑 Owner ID: {OWNER_ID}")
+    logger.info(f"🛡️ Admins: {admin_ids}")
+    logger.info("=" * 40)
+
+    try:
+        keep_alive()
+        logger.info("🚀 Starting Telegram Bot Polling...")
+
+        bot.infinity_polling(
+            timeout=60,
+            long_polling_timeout=30,
+            skip_pending=True,
+            logger_level=logging.INFO
+        )
+
+    except KeyboardInterrupt:
+        logger.warning("Bot stopped manually.")
+
+    except Exception as e:
+        logger.critical(f"Bot stopped due to error: {e}", exc_info=True)
+
+    finally:
+        logger.warning("Bot shutting down...")
+        cleanup()
